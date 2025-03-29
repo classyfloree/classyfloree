@@ -1,0 +1,25 @@
+body {
+    font-family: 'Pacifico', cursive;
+    background-color: #FFE6E6;
+    text-align: center;
+    padding: 20px;
+}
+
+.editor {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+}
+
+.mockup {
+    margin-top: 20px;
+}
+
+button {
+    background: #FF69B4;
+    color: white;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
