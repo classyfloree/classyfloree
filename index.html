@@ -3,44 +3,164 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ClassyFloree - Studio Ghibli Photo Editor</title>
+    <title>Tanushri ✨ Photo to Ghibli-Style Art</title>
+    <link href="https://fonts.googleapis.com/css2?family=Sacramento&display=swap" rel="stylesheet">
     <style>
+        /* Pastel Color Scheme */
+        :root {
+            --pink: #FFB3C6;
+            --lavender: #C7A2D1;
+            --mint: #B5E2FA;
+        }
+
         body {
-            background-color: #FFFBF5;
-            font-family: Arial, sans-serif;
-            text-align: center;
+            font-family: 'Quicksand', sans-serif;
+            background: linear-gradient(to bottom right, var(--mint), var(--pink));
+        }
+
+        #logo {
+            font-family: 'Sacramento', cursive;
+            font-size: 2.5em;
+            color: #fff;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .editor-container {
+            display: grid;
+            grid-template-columns: 1fr 300px;
+            gap: 20px;
             padding: 20px;
         }
-        h1 {
-            color: #FF6B6B;
+
+        #canvas-wrapper {
+            background: white;
+            border-radius: 15px;
+            padding: 15px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
         }
-        button {
-            background-color: #FF6B6B;
+
+        .mockup-preview {
+            background: rgba(255,255,255,0.9);
+            border-radius: 15px;
+            padding: 15px;
+        }
+
+        .cta-button {
+            background: var(--lavender);
             color: white;
             border: none;
-            padding: 10px 20px;
-            font-size: 16px;
+            padding: 12px 24px;
+            border-radius: 25px;
             cursor: pointer;
-            border-radius: 5px;
+            transition: transform 0.2s;
         }
-        button:hover {
-            background-color: #FF3B3B;
+
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            .editor-container {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
 </head>
 <body>
-    <h1>Welcome to ClassyFloree</h1>
-    <p>Upload your photo and transform it into Studio Ghibli style!</p>
-    <input type="file" id="uploadImage" accept="image/*">
-    <br><br>
-    <button onclick="applyFilter()">Apply Ghibli Filter</button>
-    <br><br>
-    <img id="outputImage" style="max-width: 100%; display: none;">
-    
+    <header>
+        <h1 id="logo">Tanushri</h1>
+    </header>
+
+    <div class="editor-container">
+        <!-- Main Editor Area -->
+        <div id="canvas-wrapper">
+            <canvas id="main-canvas"></canvas>
+            
+            <div class="toolbar">
+                <input type="file" id="image-upload" accept="image/*">
+                <button onclick="applyGhibliFilter()">✨ Make It Ghibli</button>
+                <div class="sliders">
+                    <input type="range" id="brightness" min="0" max="200" value="100">
+                    <input type="range" id="contrast" min="0" max="200" value="100">
+                </div>
+            </div>
+        </div>
+
+        <!-- Mockup Sidebar -->
+        <div class="mockup-preview">
+            <div id="mockup-container"></div>
+            <div class="color-picker">
+                <div class="color-option" style="background: #FFB3C6" onclick="changeShirtColor(this)"></div>
+                <!-- Add more color options -->
+            </div>
+            <button id="whatsapp-cta" class="cta-button" onclick="shareToWhatsApp()"></button>
+            <div class="download-options">
+                <button onclick="downloadHD('web')">🖥 Web Quality</button>
+                <button onclick="downloadHD('print')">🖨 Print Version</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/4.5.0/fabric.min.js"></script>
     <script>
-        function applyFilter() {
-            alert("Studio Ghibli filter will be applied soon!");
-            // Yaha baad me AI filter ka code add karenge
+        // Canvas Setup
+        const canvas = new fabric.Canvas('main-canvas');
+        let currentImage = null;
+
+        // Image Upload
+        document.getElementById('image-upload').onchange = function(e) {
+            const file = e.target.files[0];
+            const reader = new FileReader();
+            
+            reader.onload = function(f) {
+                fabric.Image.fromURL(f.target.result, function(img) {
+                    canvas.setBackgroundImage(img, canvas.renderAll.bind(canvas), {
+                        scaleX: canvas.width / img.width,
+                        scaleY: canvas.height / img.height
+                    });
+                    currentImage = img;
+                });
+            };
+            reader.readAsDataURL(file);
+        };
+
+        // Dynamic WhatsApp CTA
+        const messages = ["Share with your 🌸 BFF!", "Send to your 💖 crush!", "Show Mom your creation!"];
+        document.getElementById('whatsapp-cta').innerText = messages[Math.floor(Math.random() * messages.length)];
+
+        // Basic Image Adjustments
+        document.getElementById('brightness').addEventListener('input', (e) => {
+            currentImage.filters.push(new fabric.Image.filters.Brightness({ brightness: e.target.value/100 }));
+            currentImage.applyFilters();
+            canvas.renderAll();
+        });
+
+        // Mockup Generation
+        function generateMockup() {
+            // This would use Fabric.js to composite image onto mockup template
+            const mockupImg = new Image();
+            mockupImg.src = 'tshirt-mockup.png';
+            
+            fabric.Image.fromURL(mockupImg.src, function(img) {
+                // Composite current image onto mockup
+                // Actual implementation requires precise positioning
+            });
+        }
+
+        // WhatsApp Sharing
+        function shareToWhatsApp() {
+            const dataURL = canvas.toDataURL({ format: 'jpeg', quality: 0.9 });
+            const message = encodeURIComponent("Look what I created with Tanushri! ✨");
+            window.open(`whatsapp://send?text=${message}&image=${dataURL}`);
+        }
+
+        // Premium Lock System
+        let editCount = 0;
+        function checkEdits() {
+            if(++editCount > 2 && !isPremium) {
+                showReferralGate();
+            }
+        }
+
+        function showReferralGate() {
+            // Implement referral sharing logic
         }
     </script>
 </body>
