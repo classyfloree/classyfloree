@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ClassyFloree - Studio Ghibli Photo Editor</title>
+    <style>
+        body {
+            background-color: #FFFBF5;
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding: 20px;
+        }
+        h1 {
+            color: #FF6B6B;
+        }
+        button {
+            background-color: #FF6B6B;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        button:hover {
+            background-color: #FF3B3B;
+        }
+    </style>
+</head>
+<body>
+    <h1>Welcome to ClassyFloree</h1>
+    <p>Upload your photo and transform it into Studio Ghibli style!</p>
+    <input type="file" id="uploadImage" accept="image/*">
+    <br><br>
+    <button onclick="applyFilter()">Apply Ghibli Filter</button>
+    <br><br>
+    <img id="outputImage" style="max-width: 100%; display: none;">
+    
+    <script>
+        function applyFilter() {
+            alert("Studio Ghibli filter will be applied soon!");
+            // Yaha baad me AI filter ka code add karenge
+        }
+    </script>
+</body>
+</html>
